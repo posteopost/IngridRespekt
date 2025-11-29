@@ -1,114 +1,456 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Samichlaus – Die Grosse Rückkehr</title>
-<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Der Samichlaus — Spektakel</title>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 <style>
-body {
-  margin:0;
-  padding:0;
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(to bottom, #ffebe6, #fff8f0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+  :root{
+    --bg1:#0f1724;
+    --bg2:#081328;
+    --card:#fffdf8;
+    --accent:#e33b3b;
+    --accent-2:#ffd36b;
+    --glass: rgba(255,255,255,0.06);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(circle at 10% 20%, #0f2a4b 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #2b0a2b 0%, transparent 20%),
+                linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:#fff;
+    overflow-x:hidden;
+  }
 
-.container {
-  background: rgba(255,255,255,0.95);
-  padding: 40px;
-  max-width: 750px;
-  border-radius: 20px;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
-  text-align: center;
-  position: relative;
-  animation: fadeIn 1.2s ease-out;
-}
+  /* page layout */
+  .stage{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 1fr;
+    align-items:center;
+    justify-items:center;
+    padding:48px 18px;
+    gap:24px;
+    position:relative;
+  }
 
-h1 {
-  font-family: 'Chewy', cursive;
-  font-size: 3.2rem;
-  color: #c41616;
-  text-shadow: 3px 3px 12px #ffb5b5;
-  margin-bottom: 20px;
-}
+  /* layered parallax background */
+  .layer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    overflow:hidden;
+  }
+  .layer .mountain{
+    position:absolute;
+    bottom:-10%;
+    left:-10%;
+    width:120%;
+    height:60%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.15));
+    filter: blur(30px);
+    transform: translateZ(-1px) scale(1.05);
+    opacity:0.6;
+  }
 
-p {
-  font-size: 1.25rem;
-  line-height: 1.7;
-  margin-bottom: 22px;
-}
+  .aurora {
+    position: absolute;
+    top: -25%;
+    left: -10%;
+    width: 120%;
+    height: 80%;
+    background: linear-gradient(90deg, rgba(0,255,200,0.06), rgba(255,50,150,0.06), rgba(255,255,0,0.04));
+    mix-blend-mode: screen;
+    filter: blur(40px) saturate(140%);
+    animation: slowShift 18s linear infinite;
+  }
+  @keyframes slowShift {
+    0%{ transform: translateX(-10%) scale(1) }
+    50%{ transform: translateX(10%) scale(1.05) }
+    100%{ transform: translateX(-10%) scale(1) }
+  }
 
-.highlight {
-  color: #c41616;
-  font-weight: bold;
-}
+  /* headline card */
+  .card{
+    position:relative;
+    z-index:6;
+    width:100%;
+    max-width:1100px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:20px;
+    padding:28px;
+    box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:24px;
+    align-items:center;
+    backdrop-filter: blur(6px) saturate(1.05);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
 
-button {
-  padding: 15px 35px;
-  font-size: 1.2rem;
-  border:none;
-  border-radius: 15px;
-  background: linear-gradient(45deg,#d40000,#ffbf00);
-  color:white;
-  cursor:pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+  /* left content */
+  .hero {
+    padding:12px 6px;
+  }
+  h1{
+    font-family: 'Chewy', cursive;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    margin:0 0 6px 0;
+    color:var(--accent);
+    text-shadow: 0 6px 30px rgba(200,40,40,0.18);
+  }
+  .lead{
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    color: #f3f3f3;
+    line-height:1.55;
+    margin:0 0 12px 0;
+  }
+  .meta{
+    font-size:0.95rem;
+    color:#e7e7e7;
+    margin-top:6px;
+  }
 
-button:hover {
-  transform: scale(1.12);
-  box-shadow: 0 0 22px #ffcc00;
-}
+  /* right column: festive panel */
+  .panel{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:14px;
+    padding:18px;
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .panel h3{ margin:0 0 8px 0; color:var(--accent-2); font-weight:800 }
+  .countdown{ font-weight:800; font-size:1.4rem; margin-bottom:8px; color:#fff }
+  .rsvpBtn{
+    display:inline-block;
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:none;
+    background:linear-gradient(90deg,var(--accent),#ff7a2b);
+    color:#111;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow: 0 8px 20px rgba(227,59,59,0.22);
+  }
+  .rsvpBtn:active{ transform:translateY(1px) }
 
-/* Schneefall */
-.snowflake {
-  position: fixed;
-  top: -10px;
-  color: white;
-  font-size: 1em;
-  user-select:none;
-  z-index: 1;
-  pointer-events: none;
-  animation: fall linear infinite;
-}
+  /* decorative sleigh */
+  .sleigh{
+    position:absolute;
+    right:-12%;
+    top:-4%;
+    width:420px;
+    height:160px;
+    z-index:3;
+    transform-origin:center;
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.35));
+    animation: fly 16s linear infinite;
+  }
+  @keyframes fly {
+    0%{ transform: translateX(-10vw) translateY(0) rotate(-6deg) scale(0.95) }
+    50%{ transform: translateX(-40vw) translateY(-6vh) rotate(6deg) scale(1.05) }
+    100%{ transform: translateX(-10vw) translateY(0) rotate(-6deg) scale(0.95) }
+  }
 
-@keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); opacity:1; }
-  100% { transform: translateY(110vh) rotate(360deg); opacity:0; }
-}
+  /* footer / extras */
+  .extras{
+    margin-top:18px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .chip{
+    background:var(--glass);
+    padding:8px 12px;
+    border-radius:999px;
+    font-weight:700;
+    border:1px solid rgba(255,255,255,0.03);
+  }
 
-@keyframes fadeIn {
-  from {opacity:0; transform: translateY(-25px);}
-  to {opacity:1; transform: translateY(0);}
-}
+  /* RSVP modal */
+  .modal {
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.45));
+    z-index:40;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .modal.show{ opacity:1; pointer-events:auto }
+  .dialog{
+    width:100%;
+    max-width:640px;
+    background:var(--card);
+    color:#111;
+    border-radius:14px;
+    padding:22px;
+    box-shadow:0 18px 60px rgba(2,6,23,0.6);
+  }
+  .dialog h2{ margin:0 0 8px 0; color:var(--accent) }
+  .formRow{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px }
+  .formRow.full{ grid-column:1/-1 }
+  input, textarea, select{
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid rgba(0,0,0,0.08);
+    font-size:1rem;
+  }
+  .dialog .actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:14px }
+
+  /* accessibility / reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .sleigh, .aurora, .layer, .snowflake, .card, .container { animation: none !important; transition: none !important; }
+  }
+
+  /* responsive */
+  @media (max-width:980px){
+    .card{ grid-template-columns: 1fr; padding:18px }
+    .sleigh{ display:none }
+    .panel{ order:-1 }
+  }
+  @media (max-width:520px){
+    h1{ font-size:2rem }
+  }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Der Samichlaus kommt!</h1>
-  <p>Es ist wieder so weit – der <span class="highlight">Samichlaus</span> bereitet seinen grossen Besuch vor.</p>
-  <p>Er hat Euch im vergangenen Jahr aufmerksam beobachtet – meist erfreut, manchmal leicht stirnrunzelnd… aber es bleibt genug Zeit, um bis zum <span class="highlight">6. Dezember</span> das Beste aus Euch herauszuholen.</p>
-  <p>Seid Ihr dabei? Der Samichlaus freut sich über jede Rückmeldung.</p>
-  <p>Und natürlich: Eure Partnerinnen und Partner sind jederzeit willkommen.</p>
-  <button onclick="alert('Danke für Eure Rückmeldung!')">Teilnahme bestätigen</button>
+<div class="layer" aria-hidden="true">
+  <div class="aurora"></div>
+  <svg class="sleigh" viewBox="0 0 800 300" preserveAspectRatio="xMaxYMin meet" role="img" aria-hidden="true">
+    <!-- stylized sleigh + reindeer (SVG shapes) -->
+    <g transform="scale(0.9)">
+      <path d="M30 200 Q120 220 180 190 Q260 160 340 170 Q420 180 520 150 Q600 130 760 170" fill="none" stroke="#ffd36b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+      <g transform="translate(60,20)">
+        <rect x="0" y="80" width="220" height="70" rx="18" fill="#d33b3b"/>
+        <rect x="8" y="72" width="200" height="76" rx="14" fill="#ff6b6b"/>
+        <circle cx="40" cy="160" r="22" fill="#111"/>
+        <circle cx="180" cy="160" r="22" fill="#111"/>
+      </g>
+    </g>
+  </svg>
+  <div class="mountain"></div>
+</div>
+
+<section class="stage" aria-labelledby="mainTitle">
+  <article class="card" role="article">
+    <div class="hero" aria-labelledby="mainTitle">
+      <h1 id="mainTitle">Der Samichlaus — Die Grosse Rückkehr</h1>
+      <p class="lead">Der Samichlaus bereitet seinen Besuch vor. Er hat Euch das Jahr über beobachtet — meist lobend. Bis zum <strong>6. Dezember</strong> bleibt noch Zeit, das Ruder zu Euren Gunsten herumzureissen. Seid Ihr dabei?</p>
+      <div class="extras" aria-hidden="false">
+        <div class="chip">Datum: 6. Dezember</div>
+        <div class="chip">Partner willkommen</div>
+        <div class="chip">RSVP erwünscht</div>
+      </div>
+    </div>
+
+    <aside class="panel" aria-label="Event-Panel">
+      <h3>Schnell-Info</h3>
+      <div class="countdown" id="countdown" aria-live="polite">Lädt Countdown…</div>
+      <div style="margin-bottom:10px">Bitte kurz Bescheid geben — wir freuen uns!</div>
+      <button class="rsvpBtn" id="openRsvp">Teilnahme bestätigen</button>
+      <div style="margin-top:12px; font-size:0.95rem; color:#eee">Ihr könnt per Formular antworten oder eine Bestätigungs-Mail generieren.</div>
+    </aside>
+  </article>
+</section>
+
+<!-- Modal RSVP -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="dialog" role="document">
+    <h2>Teilnahme bestätigen</h2>
+    <p>Fülle kurz aus – deine Antwort wird lokal gespeichert und kann per Mail geöffnet werden.</p>
+    <form id="rsvp" autocomplete="on">
+      <div class="formRow">
+        <div>
+          <label for="nm">Name</label>
+          <input id="nm" name="name" required />
+        </div>
+        <div>
+          <label for="em">E-Mail</label>
+          <input id="em" name="email" type="email" required />
+        </div>
+      </div>
+      <div class="formRow full">
+        <label for="note">Hinweis (optional)</label>
+        <textarea id="note" name="note"></textarea>
+      </div>
+      <div class="formRow full">
+        <label for="people">Anzahl Personen</label>
+        <select id="people" name="people">
+          <option>1</option><option>2</option><option>3</option><option>4+</option>
+        </select>
+      </div>
+      <div class="actions">
+        <button type="button" id="closeModal" class="secondary" style="background:transparent;color:var(--accent);border:1px solid rgba(0,0,0,0.06);">Abbrechen</button>
+        <button type="submit" style="background:linear-gradient(90deg,var(--accent),#ff7a2b);">Absenden & Mail</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
-for(let i=0;i<100;i++){
-  const snow = document.createElement('div');
-  snow.className = 'snowflake';
-  snow.style.left = Math.random()*100 + 'vw';
-  snow.style.fontSize = 10 + Math.random()*20 + 'px';
-  snow.style.animationDuration = 5 + Math.random()*5 + 's';
-  snow.textContent = '❄';
-  document.body.appendChild(snow);
-}
-</script>
+/* Countdown to next 6 December (this year or next) */
+(function(){
+  const el = document.getElementById('countdown');
+  function nextDec6(){
+    const now = new Date();
+    let year = now.getFullYear();
+    const target = new Date(year, 11 /*Dec*/, 6, 18, 0, 0);
+    if(now > target) target.setFullYear(year+1);
+    return target;
+  }
+  let target = nextDec6();
+  function tick(){
+    const now = new Date();
+    const diff = Math.max(0, target - now);
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hrs = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+    const secs = Math.floor((diff % (1000*60)) / 1000);
+    el.textContent = `${days}d ${hrs}h ${mins}m ${secs}s bis 6. Dezember`;
+    if(diff<=0) el.textContent = 'Heute ist der Samichlaus-Tag!';
+  }
+  tick(); setInterval(tick,1000);
+})();
 
+/* lightweight decorative snow (not heavy CSS anims) */
+(function(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const count = Math.min(60, Math.round(window.innerWidth/18));
+  for(let i=0;i<count;i++){
+    const s = document.createElement('div');
+    s.className='snowflake';
+    s.textContent='❄';
+    const left = Math.random()*100;
+    s.style.left = left + 'vw';
+    s.style.fontSize = (10 + Math.random()*26) + 'px';
+    s.style.opacity = 0.8 - Math.random()*0.5;
+    s.style.transition = `transform ${6 + Math.random()*8}s linear`;
+    document.body.appendChild(s);
+    // simple fall using setTimeout to reset
+    (function animate(node){
+      const dur = 6000 + Math.random()*12000;
+      function play(){
+        node.style.transform = `translateY(${110 + Math.random()*60}vh) rotate(${Math.random()*720}deg)`;
+        node.style.opacity = 0;
+        setTimeout(()=>{
+          node.style.transition = 'none';
+          node.style.transform = `translateY(-20vh)`;
+          node.style.opacity = 1;
+          node.style.left = Math.random()*100 + 'vw';
+          // force reflow
+          void node.offsetWidth;
+          node.style.transition = `transform ${dur}ms linear`;
+          setTimeout(play, 50);
+        }, dur);
+      }
+      play();
+    })(s);
+  }
+})();
+
+/* Modal + form handling (local save + mailto) */
+(function(){
+  const modal = document.getElementById('modal');
+  const openBtn = document.getElementById('openRsvp');
+  const closeBtn = document.getElementById('closeModal');
+  const form = document.getElementById('rsvp');
+
+  function showModal(show){
+    modal.classList.toggle('show', show);
+    modal.setAttribute('aria-hidden', !show);
+    if(show) document.getElementById('nm').focus();
+  }
+
+  openBtn.addEventListener('click', ()=> showModal(true));
+  closeBtn.addEventListener('click', ()=> showModal(false));
+  modal.addEventListener('click', (e)=> { if(e.target===modal) showModal(false); });
+
+  function save(data){
+    try{
+      const key='samichlaus_rsvps';
+      const arr = JSON.parse(localStorage.getItem(key)||'[]');
+      arr.push(Object.assign({ts:new Date().toISOString()}, data));
+      localStorage.setItem(key, JSON.stringify(arr));
+    }catch(e){ console.warn(e) }
+  }
+  function buildMail(data){
+    const subj = encodeURIComponent('RSVP Samichlaus');
+    const body = encodeURIComponent([
+      `Name: ${data.name}`,
+      `E-Mail: ${data.email}`,
+      `Personen: ${data.people}`,
+      `Hinweis: ${data.note || '-'}`,
+      '',
+      'Beste Grüsse'
+    ].join('\n'));
+    return `mailto:?subject=${subj}&body=${body}`;
+  }
+
+  form.addEventListener('submit', (ev)=>{
+    ev.preventDefault();
+    const fd = new FormData(form);
+    const data = {
+      name: fd.get('name').trim(),
+      email: fd.get('email').trim(),
+      note: fd.get('note').trim(),
+      people: fd.get('people')
+    };
+    if(!data.name || !data.email){
+      alert('Bitte Name und E-Mail ausfüllen.');
+      return;
+    }
+    save(data);
+    // small confetti burst
+    smallConfetti();
+    // open mailto for convenience
+    window.location.href = buildMail(data);
+    showModal(false);
+  });
+
+  // tiny confetti using canvas
+  function smallConfetti(){
+    const c = document.createElement('canvas');
+    c.style.position='fixed'; c.style.left=0; c.style.top=0; c.style.zIndex=60; c.style.pointerEvents='none';
+    c.width = innerWidth; c.height = innerHeight;
+    document.body.appendChild(c);
+    const ctx = c.getContext('2d');
+    const pieces = [];
+    for(let i=0;i<80;i++){
+      pieces.push({
+        x: innerWidth/2 + (Math.random()-0.5)*200,
+        y: innerHeight/2 + (Math.random()-0.5)*100,
+        vx: (Math.random()-0.5)*6,
+        vy: -5 - Math.random()*3,
+        r: 4+Math.random()*6,
+        color: ['#ffd36b','#ff6b6b','#00ffd1','#7af','#fff'][Math.floor(Math.random()*6)]
+      });
+    }
+    let t=0;
+    function frame(){
+      t++; ctx.clearRect(0,0,c.width,c.height);
+      for(const p of pieces){
+        p.vy += 0.25; p.x += p.vx; p.y += p.vy;
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.ellipse(p.x,p.y,p.r,p.r*0.7,0,0,Math.PI*2); ctx.fill();
+      }
+      if(t<120) requestAnimationFrame(frame); else c.remove();
+    }
+    frame();
+  }
+
+})();
+</script>
 </body>
 </html>
